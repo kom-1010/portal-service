@@ -4,28 +4,47 @@ import java.sql.*;
 
 public class UserDao {
     public User get(Integer id) throws ClassNotFoundException, SQLException {
-        //mysql
-        // 1.driver 로딩
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        // 2.connection
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju?serverTimezone=Asia/Seoul"
-                , "jinsu", "1234");
-        // 3.query 생성
+        Connection connection = getConnection();
+        // 3.create query
         PreparedStatement preparedStatement = connection.prepareStatement("select id, name, password from userinfo where id = ?");
         preparedStatement.setInt(1, id);
-        // 4.query 실행
+        // 4.query implement
         ResultSet resultSet = preparedStatement.executeQuery();
         resultSet.next();
-        // 5.결과 매핑
+        // 5.result mapping
         User user = new User();
         user.setId(resultSet.getInt("id"));
         user.setName(resultSet.getString("name"));
         user.setPassword(resultSet.getString("password"));
-        // 6.자원 해지
+        // 6.source close
         resultSet.close();
         preparedStatement.close();
         connection.close();
-        // 7.결과 리턴
+        // 7. result return
         return user;
+    }
+
+    public void insert(User user) throws ClassNotFoundException, SQLException {
+        //mysql
+        // 1.driver loading
+        Connection connection = getConnection();
+        // 3.create query
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into userinfo (name, password) value (?, ?)", Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getPassword());
+        preparedStatement.executeUpdate();
+        ResultSet resultSet = preparedStatement.getGeneratedKeys();
+        resultSet.next();
+        user.setId(resultSet.getInt(1));
+        resultSet.close();
+        preparedStatement.close();
+        connection.close();
+        // 7. result return
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection("jdbc:mysql://localhost/jeju?serverTimezone=Asia/Seoul"
+                , "jinsu", "1234");
     }
 }
