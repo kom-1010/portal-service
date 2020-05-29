@@ -19,11 +19,13 @@ public class UserDaoTests {
     String name = "hulk";
     String password = "1234";
 
-    public static UserDao userDao;
+    private static UserDao userDao;
 
     @BeforeAll
-    public static void setup(){
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("kr.ac.jejunu.user");
+    public static void setup() throws ClassNotFoundException {
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext("kr.ac.jejunu.user");
+
+//        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("kr.ac.jejunu.user");
 
 //        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("daoFactory.xml");
 //        ApplicationContext applicationContext = new GenericGroovyApplicationContext("daoFactory.groovy");
@@ -32,7 +34,7 @@ public class UserDaoTests {
     }
 
     @Test
-    public void get() throws SQLException, ClassNotFoundException {
+    public void get() throws SQLException, ClassNotFoundException{
         Integer id = 1;
 
         User user = userDao.get(id);
@@ -42,7 +44,7 @@ public class UserDaoTests {
     }
 
     @Test
-    public void insert() throws SQLException, ClassNotFoundException {
+    public void insert() throws SQLException, ClassNotFoundException{
         User user = new User();
         user.setName(name);
         user.setPassword(password);
@@ -54,7 +56,8 @@ public class UserDaoTests {
         assertThat(insertedUser.getPassword(), is(password));
     }
 
-    public void update() throws SQLException {
+    @Test
+    public void update() throws SQLException{
         User user = new User();
         user.setName(name);
         user.setPassword(password);
@@ -72,7 +75,8 @@ public class UserDaoTests {
         assertThat(updatedUser.getPassword(), is(updatedPassword));
     }
 
-    public void delete() throws SQLException {
+    @Test
+    public void delete() throws SQLException{
         User user = new User();
         user.setName(name);
         user.setPassword(password);

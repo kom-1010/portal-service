@@ -10,12 +10,11 @@ import java.sql.*;
 
 @Component
 public class UserDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-//    public UserDao(JdbcTemplate jdbcTemplate) {
-//        this.jdbcTemplate = jdbcTemplate;
-//    }
+    public UserDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public User get(Integer id) {
         Object[] params = new Object[] {id};
